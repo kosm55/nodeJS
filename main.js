@@ -1,97 +1,61 @@
-const path= require('node:path')
-const readline= require('node:readline/promises')
-const fsPromises= require('node:fs/promises')
-const os= require('node:os')
-const EventEmitter= require('node:events')
-const http= require('node:http')
+const fsPromises=require("node:fs/promises")
+const path=require('node:path')
 
-async function foo(){
-    try{
-        console.log("--------------start")
-        // ----- PATH:
-        // console.log(path.basename(__filename));
-        // console.log(path.dirname(__filename));
-        // console.log(path.extname(__filename));
-        // console.log(path.parse(__filename).name);
-        // console.log(path.join(__dirname, 'do','some','one','else'));
-        // console.log(path.normalize("\\\\\\\Liudmyla\\Desktop\\октен фулстак навчання\\nodeJS\n"));
-        // console.log(path.isAbsolute("\\Users\\Liudmyla\\Desktop\\октен фулстак навчання\\nodeJS\n"));
+async function creatingFiles(){
+    try {
+        // await fsPromises.mkdir(path.join(__dirname, 'baseFolder'))
 
-        // ----- readline:
-        // readline.createInterface({
-        //     input: process.stdin,
-        //     output: process.stdout
-        // }).question('enter your name: ', (name)=>{
-        //     console.log(`hello, ${name}!`)
-        //     process.exit(0)
-        // })
+        // await fsPromises.mkdir(path.join(__dirname, 'baseFolder', 'one'))
+        // await fsPromises.writeFile(path.join(__dirname, 'baseFolder', 'one', 'one.txt'), 'from 1')
 
-        // const qw=readline.createInterface({
-        //     input: process.stdin,
-        //     output: process.stdout
-        // })
-        // const name= await qw.question('enter your name: ')
-        //     console.log(`hello, ${name}!`)
-        // qw.close()
+        // await fsPromises.mkdir(path.join(__dirname, 'baseFolder', 'two'))
+        // await fsPromises.writeFile(path.join(__dirname, 'baseFolder', 'two', 'two.txt'), 'from 2')
+        // await fsPromises.mkdir(path.join(__dirname, 'baseFolder', 'three'))
+        // await fsPromises.writeFile(path.join(__dirname, 'baseFolder', 'three', 'three.txt'), 'from 3')
+        // await fsPromises.mkdir(path.join(__dirname, 'baseFolder', 'four'))
+        // await fsPromises.writeFile(path.join(__dirname, 'baseFolder', 'four', 'four.txt'), 'from 4')
+        // await fsPromises.mkdir(path.join(__dirname, 'baseFolder', 'five'))
+        // await fsPromises.writeFile(path.join(__dirname, 'baseFolder', 'five', 'five.txt'), 'from 5')
+        console.log('-----start')
+        console.log(path.join(__dirname,'baseFolder', 'one'))
+        const oneDir= await fsPromises.stat(path.join(__dirname,'baseFolder', 'one'))
+        console.log(`is directory- ${oneDir.isDirectory()}`)
+        console.log(path.join(__dirname, 'baseFolder', 'one', 'one.txt'))
+        const oneFile= await fsPromises.stat(path.join(__dirname, 'baseFolder', 'one', 'one.txt'))
+        console.log(`is file- ${oneFile.isFile()}`)
 
-        //--------fsPromises:
-        //await fsPromises.writeFile('test.txt', 'hello writeFile')
-        //const pathToTestFile=path.join(__dirname,'www', 'test2.txt')
-        //await fsPromises.writeFile(pathToTestFile, 'hello writeFile2')
-        // const data= await fsPromises.readFile(pathToTestFile, 'utf-8')
-        // console.log(data)
-        // await fsPromises.appendFile(pathToTestFile, '\nhello add new text')
-        // await fsPromises.rename(pathToTestFile, path.join(__dirname, 'test3.txt'))
-        // await fsPromises.mkdir(path.join(__dirname, 'foo', 'bar'), {recursive: true})
-        // await fsPromises.writeFile(path.join(__dirname, 'foo', 'bar', "qwe.txt"), 'hello create new')
-        //await fsPromises.rmdir(path.join(__dirname,'foo', 'bar'), {recursive:true})
-        //await fsPromises.unlink(path.join(__dirname, 'test.txt'))
-        // await fsPromises.copyFile(path.join(__dirname, 'www', 'test3.txt'), path.join(__dirname,'copy-test2.txt'))
-        // const a = await  fsPromises.stat(path.join(__dirname, 'copy-test2.txt'))
-        // console.log(a.isFile())
+        console.log(path.join(__dirname, 'baseFolder','two'))
+        const twoDir=await fsPromises.stat(path.join(__dirname,'baseFolder', 'two' ))
+        console.log(`is directory- ${twoDir.isDirectory()}`)
+        console.log(path.join(__dirname, 'baseFolder', 'two', 'two.txt'))
+        const twoFile= await fsPromises.stat(path.join(__dirname, 'baseFolder', 'two', 'two.txt'))
+        console.log(`is file- ${twoFile.isFile()}`)
 
-        //-------os
-        // console.log(os.arch())
-        // console.log(os.cpus())
-        // console.log(os.homedir())
-        // console.log(os.hostname())
-        // console.log(os.version())
-        // console.log(os.machine())
-        // console.log(os.platform())
-        // console.log(os.uptime() /60/60/24)
+        console.log(path.join(__dirname, 'baseFolder', 'three'))
+        const threeDir= await fsPromises.stat(path.join(__dirname,'baseFolder', 'three'))
+        console.log(`is directory- ${threeDir.isDirectory()}`)
+        console.log(path.join(__dirname, 'baseFolder', 'three', 'three.txt'))
+        const threeFile= await fsPromises.stat(path.join(__dirname, 'baseFolder', 'three', 'three.txt'))
+        console.log(`is file- ${threeFile.isFile()}`)
 
-        //------process:
-        // console.log(process.argv)
+        console.log(path.join(__dirname, 'baseFolder', 'four'))
+        const fourDir= await fsPromises.stat(path.join(__dirname,'baseFolder', 'four'))
+        console.log(`is directory- ${fourDir.isDirectory()}`)
+        console.log(path.join(__dirname, 'baseFolder', 'four', 'four.txt'))
+        const fourFile= await fsPromises.stat(path.join(__dirname, 'baseFolder', 'four', 'four.txt'))
+        console.log(`is file- ${fourFile.isFile()}`)
 
-        //------events:
-        // const myEmitter= new EventEmitter()
-        // myEmitter.on('www', (...args)=>{
-        //     console.log('hello events:', args)
-        // })
-        // myEmitter.once('once', ()=>{
-        //     console.log('only once event')
-        // })
-        //
-        // myEmitter.emit('www', 55,44,"gga")
-        // myEmitter.emit('www')
-        // myEmitter.emit('www')
-        // myEmitter.emit('once')
-        // myEmitter.emit('once')
-        // myEmitter.emit('once')
+        console.log(path.join(__dirname, 'baseFolder', 'five'))
+        const fiveDir= await fsPromises.stat(path.join(__dirname,'baseFolder', 'five'))
+        console.log(`is directory- ${fiveDir.isDirectory()}`)
+        console.log(path.join(__dirname, 'baseFolder', 'five', 'five.txt'))
+        const fiveFile= await fsPromises.stat(path.join(__dirname, 'baseFolder', 'five', 'five.txt'))
+        console.log(`is file- ${fiveFile.isFile()}`)
 
 
-        //-----http, creating server
-        // const server= http.createServer((req, res) => {
-        //     res.end('okay')
-        // })
-        // server.listen(3000, '0.0.0.0', ()=>{
-        //     console.log('server is running http://0.0.0.0:3000/')
-        // })
-
-        // console.log("--------------finish")
     }catch (e) {
         console.log(e)
     }
 }
 
-void foo()
+void creatingFiles()

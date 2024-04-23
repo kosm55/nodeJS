@@ -80,7 +80,7 @@ app.delete('/users/:userId', async (req, res) => {
 })
 const PORT=3000
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`server is running http://0.0.0.0:${PORT}/`)
+    console.log(`server is  running http://0.0.0.0:${PORT}/`)
 })
 
 

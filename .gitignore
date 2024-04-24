@@ -1,2 +1,4 @@
 .idea
 nodeJS.iml
+node_modules
+dist

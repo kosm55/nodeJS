@@ -6,7 +6,7 @@ const reader = async () => {
     const users = await fs.readFile(filePath, 'utf-8')
     return JSON.parse(users)
 }
-const writer = async (users) => {
+const writer =  async (users) => {
     await fs.writeFile(filePath, JSON.stringify(users))
 
 }

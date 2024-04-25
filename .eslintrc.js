@@ -1,9 +1,9 @@
 module.exports = {
-    env: {
-      browser: true,
-      es2023: true,
-    },
-    extends: [
+  env: {
+    browser: true,
+    es2023: true,
+  },
+  extends: [
     "plugin:prettier/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",

@@ -2,3 +2,4 @@
 nodeJS.iml
 node_modules
 dist
+.env

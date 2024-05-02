@@ -3,6 +3,7 @@ export interface ITokenPair {
   refreshToken: string;
 }
 export interface IToken extends ITokenPair {
+  _id?: string;
   _userId: string;
 }
 export interface ITokenResponse extends ITokenPair {

@@ -34,10 +34,10 @@ class TokenService {
         throw new ApiError("Invalid token type", 401);
       }
       // switch (type) {
-      //   case TokenTypeEnum.ACCESS:
+      // case TokenTypeEnum.ACCESS:
       //   secret = config.JWT_ACCESS_SECRET;
       //   break;
-      // case TokenTypeEnum.REFRESH:
+      //   case TokenTypeEnum.REFRESH:
       //   secret = config.JWT_REFRESH_SECRET;
       //   break;
       // default:

@@ -17,4 +17,8 @@ export const emailTemplates = {
     templateName: "logout",
     subject: "Logout Successful",
   },
+  [EmailTypeEnum.OLD_VISITOR]: {
+    templateName: "oldVisitor",
+    subject: "Logout Successful",
+  },
 };

@@ -15,6 +15,7 @@ export class UserPresenter {
   public static toPublicResponseListDto(users: IUser[]): IPublicUser[] {
     return users.map(UserPresenter.toPublicResponseDto);
   }
+
   public static toPrivateResponseDto(user: IUser): IPrivateUser {
     return {
       _id: user._id,

@@ -4,7 +4,7 @@ import path from "path";
 
 import { config } from "../configs/config";
 import { emailTemplates } from "../constants/email.constant";
-import { EmailActionEnum } from "../enums/email.action.enum";
+import { EmailTypeEnum } from "../enums/email.action.enum";
 
 class EmailService {
   private transporter: Transporter;
@@ -37,10 +37,11 @@ class EmailService {
 
   public async sendMail(
     email: string,
-    emailAction: EmailActionEnum,
+    emailAction: EmailTypeEnum,
     context: Record<string, string | number> = {},
   ) {
     const { subject, templateName } = emailTemplates[emailAction]; // це для динамічності якщо буде декілька шаблонів
+    context.frontUrl = config.FRONT_URL;
     const mailOptions = {
       from: "no-reply@example.com",
       to: email,

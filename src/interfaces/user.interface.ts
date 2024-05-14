@@ -4,8 +4,8 @@ export interface IUser {
   _id: string;
   name: string;
   email: string;
-  password: string;
   phone: string;
+  password: string;
   age: number;
   role: RoleEnum;
   isDeleted: boolean;
@@ -21,6 +21,7 @@ export interface IPublicUser {
   isDeleted: boolean;
   isVerified: boolean;
 }
+
 export interface IPrivateUser {
   _id: string;
   name: string;

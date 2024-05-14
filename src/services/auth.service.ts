@@ -1,11 +1,14 @@
 import { config } from "../configs/config";
 import { errorMessages } from "../constants/error-messages.constant";
 import { statusCodes } from "../constants/status-codes.constant";
-import { EmailActionEnum } from "../enums/email.action.enum";
+import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
+import { EmailTypeEnum } from "../enums/email.action.enum";
 import { ApiError } from "../errors/api-error";
+import { IForgot, ISetForgot } from "../interfaces/action-token.interface";
 import { IJWTPayload } from "../interfaces/jwt-payload.interface";
 import { IToken, ITokenResponse } from "../interfaces/token.interface";
 import { IUser } from "../interfaces/user.interface";
+import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
 import { emailService } from "./email.service";
@@ -34,7 +37,7 @@ class AuthService {
     });
     // for nodemailer
     // await emailService.sendMail(dto.email);
-    await emailService.sendMail(config.SMTP_USER, EmailActionEnum.WELCOME, {
+    await emailService.sendMail(config.SMTP_USER, EmailTypeEnum.WELCOME, {
       name: dto.name,
     }); // це для прикладу,  буде на мій мейл слати щоб я змогла перевірити
 
@@ -65,6 +68,7 @@ class AuthService {
       userId: user._id,
       role: user.role,
     });
+
     await tokenRepository.create({
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
@@ -80,6 +84,7 @@ class AuthService {
       userId: jwtPayload.userId,
       role: jwtPayload.role,
     });
+
     await tokenRepository.deleteById(oldPair._id);
     await tokenRepository.create({
       ...newPair,
@@ -87,9 +92,39 @@ class AuthService {
     });
     return newPair;
   }
+  public async forgotPassword(dto: IForgot): Promise<void> {
+    const user = await userRepository.getByParams({ email: dto.email });
+    if (!user) return;
 
-  public async isEmailExist(email: string): Promise<void> {
-    const user = await userRepository.getByParams({ email });
+    const actionToken = tokenService.generateActionToken(
+      { userId: user._id, role: user.role },
+      ActionTokenTypeEnum.FORGOT,
+    );
+    await actionTokenRepository.create({
+      tokenType: ActionTokenTypeEnum.FORGOT,
+      actionToken,
+      _userId: user._id,
+    });
+    await emailService.sendMail(user.email, EmailTypeEnum.RESET_PASSWORD, {
+      actionToken,
+    });
+  }
+  public async setForgotPassword(
+    dto: ISetForgot,
+    jwtPayload: IJWTPayload,
+  ): Promise<void> {
+    const user = await userRepository.getById(jwtPayload.userId);
+    const hashedPassword = await passwordService.hashPassword(dto.password);
+
+    await userRepository.updateById(user._id, { password: hashedPassword });
+    await actionTokenRepository.deleteByParams({
+      tokenType: ActionTokenTypeEnum.FORGOT,
+    });
+    await tokenRepository.deleteByParams({ _userId: user._id });
+  }
+
+  private async isEmailExist(email: string): Promise<void> {
+    const user = await userRepository.getByParams({ email, isDeleted: true });
     if (user) {
       throw new ApiError(
         errorMessages.EMAIL_ALREADY_EXIST,
@@ -98,4 +133,5 @@ class AuthService {
     }
   }
 }
+
 export const authService = new AuthService();

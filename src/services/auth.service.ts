@@ -6,7 +6,7 @@ import { ApiError } from "../errors/api-error";
 import { IForgot, ISetForgot } from "../interfaces/action-token.interface";
 import { IJWTPayload } from "../interfaces/jwt-payload.interface";
 import { IToken, ITokenResponse } from "../interfaces/token.interface";
-import { IUser } from "../interfaces/user.interface";
+import { IChangePassword, IUser } from "../interfaces/user.interface";
 import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
@@ -148,6 +148,7 @@ class AuthService {
     await actionTokenRepository.deleteByParams({
       tokenType: ActionTokenTypeEnum.FORGOT,
     });
+    // видаляємо токени щоб розлогінити юзера
     await tokenRepository.deleteByParams({ _userId: user._id });
   }
   public async verify(jwtPayload: IJWTPayload): Promise<IUser> {
@@ -163,6 +164,30 @@ class AuthService {
       }),
     ]);
     return user;
+  }
+  public async changePassword(
+    jwtPayload: IJWTPayload,
+    dto: IChangePassword,
+  ): Promise<void> {
+    //знайшли юзера потрібного
+    const user = await userRepository.getById(jwtPayload.userId);
+    // перевірили чи його старий пароль співпадає з тим що в базі
+    const isCompare = await passwordService.comparePassword(
+      dto.oldPassword,
+      user.password,
+    );
+    if (!isCompare) {
+      throw new ApiError(
+        errorMessages.WRONG_OLD_PASSWORD,
+        statusCodes.UNAUTHORIZED,
+      );
+    }
+    // захешували новий пароль
+    const hashedPassword = await passwordService.hashPassword(dto.newPassword);
+    // запислаи новий пароль в базу
+    await userRepository.updateById(user._id, { password: hashedPassword });
+    // видаляємо токени, щоб розлогінити юзера на усіх пристроях
+    await tokenRepository.deleteByParams({ _userId: user._id });
   }
 
   private async isEmailExist(email: string): Promise<void> {

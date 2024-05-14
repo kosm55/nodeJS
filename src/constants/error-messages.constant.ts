@@ -6,4 +6,5 @@ export const errorMessages = {
   NO_TOKEN_PROVIDED: "no token provided",
   INVALID_TOKEN_TYPE: "Invalid token type",
   TOKEN_IS_NOT_VALID: "Token is not valid",
+  WRONG_OLD_PASSWORD: "wrong old password",
 };

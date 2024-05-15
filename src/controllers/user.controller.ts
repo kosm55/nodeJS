@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { UploadedFile } from "express-fileupload";
 
 import { statusCodes } from "../constants/status-codes.constant";
 import { IJWTPayload } from "../interfaces/jwt-payload.interface";
@@ -63,11 +64,11 @@ class UserController {
   public async uploadAvatar(req: Request, res: Response, next: NextFunction) {
     try {
       const jwtPayload = req.res.locals.jwtPayload as IJWTPayload;
-      //const avatar = req.files?.avatar as UploadedFile;
+      const avatar = req.files?.avatar as UploadedFile;
 
-      const user = await userService.deleteMe(jwtPayload.userId);
-      //const response = UserPresenter.toPrivateResponseDto(user);
-      res.status(statusCodes.CREATED).json(user);
+      const user = await userService.uploadAvatar(jwtPayload.userId, avatar);
+      const response = UserPresenter.toPrivateResponseDto(user);
+      res.status(statusCodes.CREATED).json(response);
     } catch (e) {
       next(e);
     }
